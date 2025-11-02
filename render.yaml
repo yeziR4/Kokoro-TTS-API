@@ -1,0 +1,13 @@
+services:
+- type: web
+  name: kokoro-tts-api
+  env: docker
+  plan: starter # or free tier
+  dockerfilePath: ./Dockerfile
+  envVars:
+    - key: PORT
+      value: 5000
+    - key: PYTHON_VERSION
+      value: 3.10
+  healthCheckPath: /health
+  autoDeploy: true
