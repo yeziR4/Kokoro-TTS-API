@@ -79,13 +79,14 @@ def clean_script_simple(script: str) -> List[str]:
         return []
     # Remove timestamps like [00:07], [3:22], [01:22:33]
     script = re.sub(r"\[\d{1,2}:\d{2}(?::\d{2})?\]", "", script)
-    # Fix common mojibake for apostrophes
-    script = script.replace("â", "'").replace("â€"", "-")
+    # Fix common mojibake for apostrophes and dashes
+    script = script.replace("â€™", "'").replace("â€\"", "-").replace("â€“", "-")
     # Normalize whitespace and split lines
     lines = [ln.strip() for ln in script.splitlines()]
     # Remove empty lines and short noise lines
     lines = [ln for ln in lines if ln and len(ln) > 1]
     return lines
+
 
 
 def alternate_assign_voices(lines: List[str], voices: List[str]) -> List[tuple]:
