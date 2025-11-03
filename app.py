@@ -1,3 +1,4 @@
+# main.py
 import os
 import re
 import uuid
@@ -39,6 +40,12 @@ def get_client():
             logger.info(f"Initializing Gradio client (attempt {attempt+1}/{max_retries})")
             c = Client(SPACE_ID)
             logger.info("Client initialized successfully")
+            # Log the API structure
+            try:
+                api_info = c.view_api()
+                logger.info(f"API Info: {api_info}")
+            except:
+                pass
             return c
         except Exception as e:
             logger.error(f"Failed to initialize client: {e}")
@@ -79,14 +86,13 @@ def clean_script_simple(script: str) -> List[str]:
         return []
     # Remove timestamps like [00:07], [3:22], [01:22:33]
     script = re.sub(r"\[\d{1,2}:\d{2}(?::\d{2})?\]", "", script)
-    # Fix common mojibake for apostrophes and dashes
-    script = script.replace("â€™", "'").replace("â€\"", "-").replace("â€“", "-")
+    # Fix common mojibake for apostrophes
+    script = script.replace("â", "'").replace("â€"", "-")
     # Normalize whitespace and split lines
     lines = [ln.strip() for ln in script.splitlines()]
     # Remove empty lines and short noise lines
     lines = [ln for ln in lines if ln and len(ln) > 1]
     return lines
-
 
 
 def alternate_assign_voices(lines: List[str], voices: List[str]) -> List[tuple]:
@@ -149,21 +155,35 @@ def generate_segments_blocking(assignments: List[tuple], tmp_dir: str,
         max_retries = 3
         for attempt in range(max_retries):
             try:
-                # Try calling with the exact parameters that worked in Colab
+                # Use POSITIONAL arguments instead of keyword arguments
+                # Based on the Colab code that worked, the order should be:
+                # 1. text/prompt
+                # 2. voice
+                # 3. emotion/style
+                # 4. use_random_seed
+                # 5. specific_seed
                 result = client.predict(
-                    prompt=text,
-                    voice=voice,
-                    emotion=style,
-                    use_random_seed=True,
-                    specific_seed=seed,
+                    text,           # First positional arg (the text to speak)
+                    voice,          # Second positional arg (voice name)
+                    style,          # Third positional arg (emotion/style)
+                    True,           # Fourth positional arg (use_random_seed)
+                    seed,           # Fifth positional arg (specific_seed)
                     api_name="/text_to_speech_app"
                 )
                 
+                logger.info(f"TTS result type: {type(result)}, value: {result}")
+                
                 # result should be a tuple/list with filepath at index 0
-                if not result or len(result) == 0:
+                if not result:
                     raise RuntimeError("TTS call returned empty result")
                 
-                remote_fp = result[0] if isinstance(result, (list, tuple)) else result
+                # Handle different result formats
+                if isinstance(result, (list, tuple)):
+                    remote_fp = result[0]
+                elif isinstance(result, str):
+                    remote_fp = result
+                else:
+                    raise RuntimeError(f"Unexpected result type: {type(result)}")
                 
                 if not remote_fp or not os.path.exists(remote_fp):
                     raise RuntimeError(f"TTS returned invalid filepath: {remote_fp}")
@@ -172,12 +192,16 @@ def generate_segments_blocking(assignments: List[tuple], tmp_dir: str,
                 local_fp = os.path.join(tmp_dir, f"segment_{idx+1}.mp3")
                 try:
                     shutil.move(remote_fp, local_fp)
-                except Exception:
+                except Exception as move_err:
+                    logger.warning(f"Failed to move file, trying copy: {move_err}")
                     # Fallback: try copying if moving fails
                     shutil.copy(remote_fp, local_fp)
                 
+                if not os.path.exists(local_fp):
+                    raise RuntimeError(f"Failed to save audio file to {local_fp}")
+                
                 segment_paths.append(local_fp)
-                logger.info(f"Successfully generated segment {idx+1}")
+                logger.info(f"✓ Successfully generated segment {idx+1}")
                 break  # Success, exit retry loop
                 
             except Exception as e:
@@ -215,6 +239,22 @@ def voices():
     Return a list of available voices.
     """
     return {"voices": FALLBACK_VOICES}
+
+
+@app.get("/test-api")
+def test_api():
+    """
+    Test endpoint to check the Gradio API structure
+    """
+    try:
+        global client
+        if client is None:
+            client = get_client()
+        
+        api_info = client.view_api()
+        return {"status": "success", "api_info": str(api_info)}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
 
 
 @app.post("/generate-podcast")
