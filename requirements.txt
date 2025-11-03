@@ -1,4 +1,6 @@
-Flask==3.0.0
-gunicorn==21.2.0
-kokoro==0.7.16
-soundfile==0.12.1
+fastapi==0.95.2
+uvicorn==0.22.0
+gradio-client==0.13.0
+pydub==0.25.1
+python-multipart==0.0.6
+
