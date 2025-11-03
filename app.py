@@ -178,15 +178,9 @@ def voices():
 
 
 @app.post("/generate-podcast")
-def generate_podcast(payload: dict, background_tasks: BackgroundTasks):
+def generate_podcast(payload: dict):
     """
-    Main endpoint. Payload expected:
-    {
-      "script": "<raw script text>",
-      "voices": ["nova", "onyx"],   # 1 or multiple voice names
-      "style": "Energetic sports commentary",
-      "seed": 123   # optional
-    }
+    Blocking version: waits for all TTS + merge to finish, then returns URL
     """
     script = payload.get("script", "")
     voices = payload.get("voices", []) or []
@@ -210,30 +204,25 @@ def generate_podcast(payload: dict, background_tasks: BackgroundTasks):
     output_filename = f"{job_id}.mp3"
     output_path = os.path.join(OUTPUT_DIR, output_filename)
 
-    # Run blocking TTS & merge in a threadpool to keep FastAPI responsive
-    def worker():
-        try:
-            segment_paths = generate_segments_blocking(assignments, tmp_dir, style, seed)
-            merge_audio_files(segment_paths, output_path)
-        except Exception as exc:
-            logger.exception("Error in TTS worker: %s", exc)
-            # Clean up on failure
-            safe_rm_tree(tmp_dir)
-            # Remove partial output if exists
-            if os.path.exists(output_path):
-                os.remove(output_path)
-            raise
-        finally:
-            # remove tmp segments directory
-            safe_rm_tree(tmp_dir)
+    try:
+        # Generate all TTS segments (blocking)
+        segment_paths = generate_segments_blocking(assignments, tmp_dir, style, seed)
 
-    # Add background task (executes after response is returned)
-    # NOTE: Render's request timeout may kill long tasks; for production consider background worker.
-    background_tasks.add_task(worker)
+        # Merge into single mp3
+        merge_audio_files(segment_paths, output_path)
 
-    # Provide immediate response with download URL path — frontend should poll /download or use /status
+    except Exception as exc:
+        logger.exception("Error generating podcast: %s", exc)
+        safe_rm_tree(tmp_dir)
+        if os.path.exists(output_path):
+            os.remove(output_path)
+        raise HTTPException(status_code=500, detail="TTS generation failed.")
+    finally:
+        safe_rm_tree(tmp_dir)
+
     download_url = f"/download/{job_id}"
-    return JSONResponse({"job_id": job_id, "audio_url": download_url, "status": "processing" })
+    return {"status": "completed", "audio_url": download_url, "job_id": job_id}
+
 
 
 @app.get("/download/{job_id}")
