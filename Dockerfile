@@ -1,34 +1,21 @@
+# Dockerfile
 FROM python:3.11-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    espeak-ng \
-    libsndfile1 \
-    build-essential \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
-# Copy requirements first for better caching
+# Install ffmpeg (required by pydub)
+RUN apt-get update && apt-get install -y ffmpeg build-essential libsndfile1 --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
-
-# Upgrade pip and install setuptools
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app.py .
+COPY . .
 
-# Expose port
-EXPOSE 5000
+# Create output & tmp dirs
+RUN mkdir -p /app/podcasts /tmp/podcast_segments
+ENV OUTPUT_DIR=/app/podcasts
+ENV TMP_ROOT=/tmp/podcast_segments
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PORT=5000
-
-# Run with gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]
+# Use uvicorn to serve.
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000", "--workers", "1"]
