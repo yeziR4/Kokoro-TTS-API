@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Page not found</title>
+
+  <link rel="icon" type="image/png" href="/favicon.png">
+  
+  <style>
+    :root{
+      --color-stroke: #006f91a5;
+      --color-stroke-highlight: #61cdef;
+      --bg-color: #10151B;
+    }
+
+    *, ::after, ::before {
+      box-sizing: border-box;
+      border-width: 0;
+      border-style: solid;
+      border-color: currentColor;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif; 
+      background-color:var(--bg-color);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .noselect {
+      -webkit-touch-callout: none; 
+      -webkit-user-select: none; 
+      -khtml-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      z-index: 10;
+      margin-top: 217px;
+    }
+
+    .container h1 {
+      font-weight: 500;
+      font-size: 1.35rem;
+      line-height: 1.75rem;
+      text-align: center;
+    }
+
+    .container .message {
+      max-width: clamp(50%, 100%, 368px);
+      margin-top: 1rem;
+      color: #F8F8FA;
+      font-size: 13px;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .container .error {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%,-43%);
+      z-index: -1;
+      color: #00485F;
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .container .error span{
+      font-size: 20rem;
+    }
+
+    .container .action {
+      display: flex;
+      justify-content: center;
+    }
+
+    .container .btn {
+      display: block;
+      margin: 1.5rem 0.5rem 0;
+      font-weight: 400;
+      font-size: .75rem;
+      line-height: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+    }
+
+    .container .btn.return {
+      color: #ffffff;
+      background-color: #0095C8;
+    }
+
+    .container .return:hover {
+      background-color: #037ea8;
+    }
+
+    .container .btn.level-up {
+      color: #000000;
+      background-color: #ffffff;
+    }
+
+    .container .btn.level-up:hover {
+      background-color: #e1e1e1;
+    }
+
+    .container .quicknode-logo {
+      position: absolute;
+      width: 1440px;
+      height: 1024px;
+      top: -218px;
+      z-index: -2;
+    }
+
+    .container .quicknode-logo svg {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .container .quicknode-logo svg circle.node {
+      fill: var(--color-stroke);
+      stroke:var(--color-stroke);
+    }
+ 
+    .container .quicknode-logo::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      top: 40%;
+      height: 60%;
+      width: 100%;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0, 0)), to(var(--bg-color)),to(var(--bg-color)));
+      background: -o-linear-gradient(rgba(0,0,0, 0), var(--bg-color),  var(--bg-color));
+      background: linear-gradient(rgba(0,0,0, 0), var(--bg-color), var(--bg-color));
+      pointer-events: none;
+    }
+    
+    #S5-193F-257-62 {
+      animation: shoot-1 10s ease-in-out infinite;
+    }
+
+    #P257-62 {
+      animation: highlight-1 10s linear infinite;
+    }
+
+    #S5-193F-191-274 {
+      animation: shoot-3 15s ease-in infinite;
+    }
+
+    #P191-274 {
+      animation: highlight-3 15s ease-in infinite;
+    }
+
+    #S760-683F-669-517 {
+      animation: shoot-4 30s ease-out infinite;
+    }
+
+    #P669-517 {
+      animation: highlight-4 28s ease-out infinite;
+    }
+
+    #S994-170F-740-58 {
+      animation: shoot-6 10s linear infinite;
+    }
+
+    #P740-58 {
+      animation: highlight-6 10s linear infinite;
+    }
+
+    @media screen and (max-width: 1024px) { 
+      body {
+        min-height: 100vh;
+      }
+
+      .container {
+        margin-top: 0;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container .message {
+        padding: 0 20px;
+      }
+
+      .container .error {
+        position: fixed;
+         display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0; 
+        transform: none;  
+      }
+
+      .container .error span {
+        display: block;
+        font-size: clamp(8rem,25vw, 14rem);
+        transform: translateY(-54px);
+      }
+
+      .container .action {
+        flex-direction: column;
+      }
+
+      .container .quicknode-logo,
+      .container .quicknode-logo::after {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 320px) { 
+      .container .error span {
+        transform: translateY(-30px);
+      }
+    }
+
+
+    @keyframes shoot-1 {
+      0% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+        transform: translate3D(0, 0, 0);
+      }
+
+      20% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transform: translate3D(205px, -106px, 0);
+      }
+
+      35% {
+        opacity: 0;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+        transform: translate3D(205px, -106px, 0);
+      }
+    }
+
+    @keyframes shoot-3 {
+      0% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+        transform: translate3D(0, 0, 0);
+      }
+
+      55% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+        transform: translate3D(0, 0, 0);
+      }
+
+      70% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transform: translate3D(130px, 55px, 0);
+      }
+
+      75% {
+        opacity: 0;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+        transform: translate3D(130px, 55px, 0);
+      }
+    }
+
+    @keyframes shoot-4 {
+      0% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+        transform: translate3D(0, 0, 0);
+      }
+
+      5% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transform: translate3D(-70px, -128px, 0);
+      }
+
+      15% {
+        opacity: 0;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+        transform: translate3D(-70px, -128px, 0);
+      }
+    }
+
+
+    @keyframes shoot-6 {
+      0% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+        transform: translate3D(0, 0, 0);
+      }
+
+      15% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transform: translate3D(-205px, -90px, 0);
+      }
+
+      25% {
+        opacity: 0;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+        transform: translate3D(-205px, -90px, 0);
+      }
+    }
+
+    @keyframes highlight-1 {
+      0% {
+        stroke: var(--color-stroke);
+      }
+      20% {
+        stroke: var(--color-stroke-highlight);
+      }
+      35% {
+        stroke: var(--color-stroke);
+      }
+    }
+
+    @keyframes highlight-3 {
+      0% {
+        stroke: var(--color-stroke);
+      }
+      55% {
+        stroke: var(--color-stroke);
+      }
+      70% {
+        stroke: var(--color-stroke-highlight);
+      }
+      75% {
+        stroke: var(--color-stroke);
+      }
+    }
+
+    @keyframes highlight-4 {
+      0% {
+        stroke: var(--color-stroke);
+      }
+      5% {
+        stroke: var(--color-stroke-highlight);
+      }
+      15% {
+        stroke: var(--color-stroke);
+      }
+    }
+
+    @keyframes highlight-6 {
+      0% {
+        stroke: var(--color-stroke);
+      }
+      15% {
+        stroke: var(--color-stroke-highlight);
+      }
+      25% {
+        stroke: var(--color-stroke);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Page not found</h1>
+    <p class="message">You may have mistyped the address or the page may have moved to a new URL.</p>
+    <div class="action">
+      <a href="/" class="btn return">Return to Quicknode.com</a>
+      <a href="/guides" class="btn level-up">Level up your skills</a>
+    </div>
+    <div class="error noselect"><span>404</span></div>
+    <div class="quicknode-logo noselect"><svg
+      width="1002"
+      height="771"
+      viewBox="0 0 1002 771"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M501 566.982C329.405 566.982 190.546 428.122 190.546 256.528C190.546 84.9335 329.405 -53.9261 501 -53.9261C726.449 -53.9261 873.756 177.33 786.639 379.548L588.117 314.606L868.476 594.965C950.842 505.736 1001 386.94 1001 256C1001 -20.1352 777.135 -244 501 -244C224.865 -244 1 -20.1352 1 256C1 532.135 224.865 756 501 756C597.621 756 687.378 728.545 763.936 681.554L986.217 770.255L705.857 489.369C650.947 537.415 579.142 566.982 501 566.982Z"
+        stroke="url(#q_stroke)"
+        stroke-width="1.5"
+      />
+      <path
+        d="M22 399L238 421L137 603M22 399L191 275M22 399L320 722L548 563L465 754L752 537L760 683L668 516M107 -50L256 62L3 193L191 275M107 -50L191 275M107 -50H441L271 -190L778 -155L635 -22L643 -222L995 170L740 58L922 -9L810 306M811 306L977 399L697 425M811 309L899 555"
+        stroke="#006f91a5"
+        stroke-linejoin="round"
+        stroke-dasharray="1 5"
+      />
+    
+      <path
+        d="M5 192L55 166"
+        stroke="url(#shoot_line)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        id="S5-193F-257-62"
+      />
+      <path
+        d="M5 194L55 216"
+        stroke="url(#shoot_line)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        id="S5-193F-191-274"
+      />
+      <g class="node-wrap">
+        <circle cx="257" cy="62" r="4" />
+        <circle
+          class="node node-outline"
+          id="P257-62"
+          cx="257"
+          cy="62"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="5" cy="193" r="4" />
+        <circle
+          class="node"
+          id="P5-193"
+          cx="5"
+          cy="193"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="191" cy="274" r="4" />
+        <circle
+          class="node"
+          id="P191-274"
+          cx="191"
+          cy="274"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="22" cy="400" r="4"  />
+        <circle
+          id="P22-400"
+          class="node"
+          cx="22"
+          cy="400"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="238" cy="421" r="4" />
+        <circle
+          class="node"
+          cx="238"
+          cy="421"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="139" cy="600" r="4" />
+        <circle
+          class="node"
+          cx="139"
+          cy="600"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="320" cy="722" r="4" />
+        <circle
+          class="node"
+          cx="320"
+          cy="722"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="547" cy="564" r="4" />
+        <circle
+          class="node"
+          cx="547"
+          cy="564"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="669" cy="517" r="4" />
+        <circle
+          class="node"
+          id="P669-517"
+          cx="669"
+          cy="517"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <path
+        d="M760 683L742 650"
+        stroke="url(#shoot_line_left)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        id="S760-683F-669-517"
+      />
+      <g class="node-wrap">
+        <circle cx="465" cy="755" r="4" />
+        <circle
+          class="node"
+          id="P465-755"
+          cx="465"
+          cy="755"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <path
+        d="M465 755L510 720"
+        stroke="url(#shoot_line)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        id="S465-755F-752-537"
+      />
+      <g class="node-wrap">
+        <circle cx="760" cy="683" r="4" />
+        <circle
+          class="node"
+          id="P760-683"
+          cx="760"
+          cy="683"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="752" cy="537" r="4" />
+        <circle
+          class="node"
+          ID="P752-537"
+          cx="752"
+          cy="537"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="700" cy="425" r="4" />
+        <circle
+          class="node"
+          cx="700"
+          cy="425"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="900" cy="558" r="4" />
+        <circle
+          class="node"
+          cx="900"
+          cy="558"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="809" cy="306" r="4" />
+        <circle
+          class="node"
+          cx="809"
+          cy="306"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="979" cy="400" r="4" />
+        <circle
+          class="node"
+          cx="979"
+          cy="400"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <path
+        d="M994 170L950 151"
+        stroke="url(#shoot_line_left)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        id="S994-170F-740-58"
+      />
+      <g class="node-wrap">
+        <circle cx="740" cy="58" r="4" />
+        <circle
+          class="node"
+          id="P740-58"
+          cx="740"
+          cy="58"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <g class="node-wrap">
+        <circle cx="994" cy="170" r="4" />
+        <circle
+          class="node"
+          id="P994-170"
+          cx="994"
+          cy="170"
+          r="4"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <defs>
+        <linearGradient
+          id="q_stroke"
+          x1="501"
+          y1="-244"
+          x2="501"
+          y2="770.255"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#006f91a5" />
+          <stop offset="1" stop-color="#006f91a5" stop-opacity="0.3" />
+        </linearGradient>
+        <linearGradient id="shoot_line">
+          <stop offset="5%" stop-color="#006E91" stop-opacity="0" />
+          <stop offset="95%" stop-color="#006E91" />
+        </linearGradient>
+        <linearGradient id="shoot_line_left">
+          <stop offset="5%" stop-color="#006E91" />
+          <stop offset="95%" stop-color="#006E91" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+    </svg></div>
+  </div>
+</body>
+</html>
